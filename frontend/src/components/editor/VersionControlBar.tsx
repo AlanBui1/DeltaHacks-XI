@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Save, Download, Upload, History, ChevronDown } from "lucide-react";
+import { Save, Download, Upload, History, ChevronDown, Cog } from "lucide-react";
 
 interface VersionControlBarProps {
   currentVersion?: string;
@@ -14,7 +14,7 @@ interface VersionControlBarProps {
   onSave?: () => void;
   onExport?: () => void;
   onImport?: () => void;
-  onHistory?: () => void;
+  onRender?: () => void;
 }
 
 const VersionControlBar: React.FC<VersionControlBarProps> = ({
@@ -23,7 +23,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
   onSave = () => {},
   onExport = () => {},
   onImport = () => {},
-  onHistory = () => {},
+  onRender = () => {},
 }) => {
   const versions = [
     { id: "1", name: "Version 1" },
@@ -32,9 +32,14 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
   ];
 
   return (
-    <div className="w-full h-[60px] bg-white border-b flex items-center justify-between px-4">
+    <div className="w-full h-[60px] bg-white border-b flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-4">
-        <DropdownMenu>
+        <h1 className="text-xl font-bold font-mono">Resume Customizer</h1>
+        <Button variant="outline" onClick={onRender}>
+          <Cog className="h-4 w-4 mr-2" />
+          Render Resume
+        </Button>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[150px] justify-between">
               {currentVersion}
@@ -56,7 +61,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
         <Button variant="outline" onClick={onHistory}>
           <History className="h-4 w-4 mr-2" />
           History
-        </Button>
+        </Button> */}
       </div>
 
       <div className="flex items-center gap-2">

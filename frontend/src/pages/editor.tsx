@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import EditorLayout from "@/components/editor/EditorLayout";
 import VersionControlBar from "@/components/editor/VersionControlBar";
-import { Experience, Project, ResumeData } from "@/lib/latex";
+import { convertToLatex, Experience, Project, ResumeData } from "@/lib/latex";
 import { ResumeSection } from "@/components/editor/ResumeForm";
 
 interface EditorPageProps {}
@@ -71,13 +71,42 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Importing resume...");
   };
 
-  const handleHistory = () => {
-    console.log("Opening history...");
+  const handleRender = async () => {
+    const latex = convertToLatex({
+      experiences: defaultSections[0].entries.map((e) => ({
+        title: e.title,
+        date: e.date,
+        company: e.company,
+        location: e.location,
+        points: e.bulletPoints
+      })),
+      projects: defaultSections[1].entries.map((e) => ({
+        title: e.title,
+        date: e.date,
+        points: e.bulletPoints,
+        skills: []
+      })),
+      skills: {
+        languages: defaultSections[2].entries.filter((_, i) => i % 4 === 0).map((e) => e.title),
+        frameworks: defaultSections[2].entries.filter((_, i) => i % 4 === 1).map((e) => e.title),
+        tools: defaultSections[2].entries.filter((_, i) => i % 4 === 2).map((e) => e.title),
+        other: defaultSections[2].entries.filter((_, i) => i % 4 === 3).map((e) => e.title),
+      }
+    }, name, number, email, linkedin, github);
+
+    console.log(latex);
+    // TODO: render PDF
   };
 
   const handlePanelResize = (sizes: number[]) => {
     console.log("Panels resized:", sizes);
   };
+
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [github, setGithub] = useState("");
 
   // const [data, setData] = useState<ResumeData>({
   //   projects: [],
@@ -110,10 +139,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onSave={handleSave}
         onExport={handleExport}
         onImport={handleImport}
-        onHistory={handleHistory}
+        onRender={handleRender}
       />
       <div className="flex-1">
-        <EditorLayout onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections}  />
+        <EditorLayout onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub}  />
       </div>
     </div>
   );

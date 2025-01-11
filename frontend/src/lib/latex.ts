@@ -1,6 +1,7 @@
 export type Project = {
   title: string;
   date: string;
+  skills: string[];
   points: string[];
 };
 
@@ -15,10 +16,16 @@ export type Experience = {
 export type ResumeData = {
   projects: Project[];
   experiences: Experience[];
-  skills: string[];
+  skills: {
+    languages: string[],
+    frameworks: string[],
+    tools: string[],
+    other: string[]
+  };
 };
 
-export function convertToLatex(data: ResumeData) {
+export function convertToLatex(data: ResumeData, name: string, number: string, email: string, linkedin: string, github: string) {
+  console.log(data)
   return `
   %-------------------------
 % Resume in Latex
@@ -134,10 +141,10 @@ export function convertToLatex(data: ResumeData) {
 % \\end{tabular*}
 
 \\begin{center}
-    \\textbf{\\Huge \\scshape Jake Ryan} \\\\ \\vspace{1pt}
-    \\small 123-456-7890 $|$ \\href{mailto:x@x.com}{\\underline{jake@su.edu}} $|$ 
-    \\href{https://linkedin.com/in/...}{\\underline{linkedin.com/in/jake}} $|$
-    \\href{https://github.com/...}{\\underline{github.com/jake}}
+    \\textbf{\\Huge \\scshape ${name}} \\\\ \\vspace{1pt}
+    \\small ${number} $|$ \\href{mailto:${email}}{\\underline{${email}}} $|$ 
+    \\href{https://${linkedin}}{\\underline{${linkedin}}} $|$
+    \\href{https://${github}}{\\underline{${github}}}
 \\end{center}
 
 
@@ -162,7 +169,7 @@ export function convertToLatex(data: ResumeData) {
         {${exp.title}}{${exp.date}}
         {${exp.company}}{${exp.location}}
         \\resumeItemListStart
-          ${exp.points.map((pt) => `\\resumeItem{${pt}}`)}
+          ${exp.points.map((pt) => `\\resumeItem{${pt}}`).join("\n")}
         \\resumeItemListEnd`)}
 
   \\resumeSubHeadingListEnd
@@ -175,7 +182,7 @@ export function convertToLatex(data: ResumeData) {
       `\\resumeProjectHeading
           {\\textbf{${proj.title}}}{${proj.date}}
           \\resumeItemListStart
-            ${proj.points.map((pt) => `\\resumeItem{${pt}}`)}
+            ${proj.points.map((pt) => `\\resumeItem{${pt}}\n`).join("\n")}
           \\resumeItemListEnd`)}
     \\resumeSubHeadingListEnd
 
@@ -186,10 +193,10 @@ export function convertToLatex(data: ResumeData) {
 \\section{Technical Skills}
  \\begin{itemize}[leftmargin=0.15in, label={}]
     \\small{\\item{
-     \\textbf{Languages}{: Java, Python, C/C++, SQL (Postgres), JavaScript, HTML/CSS, R} \\\\
-     \\textbf{Frameworks}{: React, Node.js, Flask, JUnit, WordPress, Material-UI, FastAPI} \\\\
-     \\textbf{Developer Tools}{: Git, Docker, TravisCI, Google Cloud Platform, VS Code, Visual Studio, PyCharm, IntelliJ, Eclipse} \\\\
-     \\textbf{Libraries}{: pandas, NumPy, Matplotlib}
+     \\textbf{Languages}{: ${data.skills.languages.join(", ")}} \\\\
+     \\textbf{Frameworks}{: ${data.skills.frameworks.join(", ")}} \\\\
+     \\textbf{Developer Tools}{: ${data.skills.tools.join(", ")}} \\\\
+     \\textbf{Other}{: ${data.skills.other.join(", ")}}
     }}
  \\end{itemize}
 

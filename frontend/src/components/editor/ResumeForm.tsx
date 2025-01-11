@@ -3,6 +3,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import BulletPointEditor from "./BulletPointEditor";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 interface EntryFields {
   id: string;
@@ -23,6 +25,16 @@ export interface ResumeSection {
 interface ResumeFormProps {
   localSections: ResumeSection[];
   setLocalSections: Dispatch<SetStateAction<ResumeSection[]>>;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
+  number: string;
+  setNumber: Dispatch<SetStateAction<string>>;
+  email: string;
+  setEmail: Dispatch<SetStateAction<string>>;
+  linkedin: string;
+  setLinkedin: Dispatch<SetStateAction<string>>;
+  github: string;
+  setGithub: Dispatch<SetStateAction<string>>;
   onSectionUpdate?: (sections: ResumeSection[]) => void;
 }
 
@@ -30,6 +42,16 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
   localSections,
   setLocalSections,
   onSectionUpdate = () => {},
+  name,
+  setName,
+  number,
+  setNumber,
+  email,
+  setEmail,
+  linkedin,
+  setLinkedin,
+  github,
+  setGithub
 }) => {
 
   const addEntry = (sectionId: string) => {
@@ -86,9 +108,67 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
   };
 
   return (
-    <div className="h-full bg-white p-4 flex flex-col gap-4">
-      <ScrollArea className="flex-1">
+    <div className="bg-white flex flex-col gap-4 h-[calc(100vh-60px)]">
+      <ScrollArea className="flex-1 p-4">
         <div className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Basic Info</h3>
+            <div className="flex items-center gap-x-5">
+              <Label htmlFor="name" className="w-24">Name</Label>
+              <Input
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value)
+                }
+                placeholder="John Doe"
+                id="name"
+              />
+            </div>
+            <div className="flex items-center gap-x-5">
+              <Label htmlFor="number" className="w-24">Number</Label>
+              <Input
+                value={number}
+                onChange={(e) =>
+                  setNumber(e.target.value)
+                }
+                placeholder="123-456-7890"
+                id="number"
+              />
+            </div>
+            <div className="flex items-center gap-x-5">
+              <Label htmlFor="email" className="w-24">Email</Label>
+              <Input
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                placeholder="johndoe@email.com"
+                id="email"
+              />
+            </div>
+            <div className="flex items-center gap-x-5">
+              <Label htmlFor="linkedin" className="w-24">LinkedIn</Label>
+              <Input
+                value={linkedin}
+                onChange={(e) =>
+                  setLinkedin(e.target.value)
+                }
+                placeholder="linkedin.com/in/johndoe"
+                id="linkedin"
+              />
+            </div>
+            <div className="flex items-center gap-x-5">
+              <Label htmlFor="github" className="w-24">GitHub</Label>
+              <Input
+                value={github}
+                onChange={(e) =>
+                  setGithub(e.target.value)
+                }
+                placeholder="github.com/johndoe"
+                id="github"
+              />
+            </div>
+          </div>
           {localSections.map((section) => (
             <div key={section.id} className="space-y-4">
               <div className="flex items-center justify-between">

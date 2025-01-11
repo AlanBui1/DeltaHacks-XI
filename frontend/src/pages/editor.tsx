@@ -98,6 +98,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       method: "POST",
       body: latex,
     });
+
+    // TODO: process pdf file
   };
 
   const handlePanelResize = (sizes: number[]) => {

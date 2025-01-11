@@ -24,6 +24,7 @@ interface EditorLayoutProps {
   setLinkedin: Dispatch<SetStateAction<string>>;
   github: string;
   setGithub: Dispatch<SetStateAction<string>>;
+  pdfData: string;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -40,10 +41,11 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   linkedin,
   setLinkedin,
   github,
-  setGithub
+  setGithub,
+  pdfData
 }) => {
   return (
-    <div className="h-full bg-gray-100">
+    <div className="h-[calc(100vh-60px)] bg-gray-100">
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={onPanelResize}
@@ -58,7 +60,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
 
         {/* Center Panel - PDF Preview */}
         <ResizablePanel defaultSize={defaultSizes[1]} minSize={30}>
-          <PDFPreviewPanel />
+          <PDFPreviewPanel pdfData={pdfData} />
         </ResizablePanel>
 
         <ResizableHandle />

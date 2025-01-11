@@ -51,7 +51,7 @@ const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
   onApplySuggestion = () => {},
 }) => {
   return (
-    <Card className="w-full h-full bg-white flex flex-col overflow-hidden">
+    <Card className="w-full h-full bg-white flex flex-col overflow-hidden rounded-none">
       <div className="p-4 border-b">
         <h3 className="text-lg font-semibold mb-2">Job Description</h3>
         <Textarea

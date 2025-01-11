@@ -108,7 +108,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
   };
 
   return (
-    <div className="bg-white flex flex-col gap-4 h-[calc(100vh-60px)]">
+    <div className="bg-white flex flex-col gap-4 h-full">
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-6">
           <div className="space-y-4">

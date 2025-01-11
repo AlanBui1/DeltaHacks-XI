@@ -1,9 +1,58 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import EditorLayout from "@/components/editor/EditorLayout";
 import VersionControlBar from "@/components/editor/VersionControlBar";
-import { ResumeData } from "@/lib/latex";
+import { Experience, Project, ResumeData } from "@/lib/latex";
+import { ResumeSection } from "@/components/editor/ResumeForm";
 
 interface EditorPageProps {}
+
+const defaultSections: ResumeSection[] = [
+  {
+    id: "experience",
+    title: "Experience",
+    type: "experience",
+    entries: [
+      {
+        id: "exp1",
+        title: "Senior Software Engineer",
+        company: "Tech Corp",
+        location: "San Francisco, CA",
+        date: "2020-Present",
+        bulletPoints: [
+          "Led development of core platform features",
+          "Managed team of 5 developers",
+        ],
+      },
+    ],
+  },
+  {
+    id: "projects",
+    title: "Projects",
+    type: "project",
+    entries: [
+      {
+        id: "proj1",
+        title: "E-commerce Platform",
+        date: "2023",
+        bulletPoints: [
+          "Built scalable architecture using React and Node.js",
+          "Implemented payment processing system",
+        ],
+      },
+    ],
+  },
+  {
+    id: "skills",
+    title: "Skills",
+    type: "skill",
+    entries: [
+      { id: "skill1", title: "JavaScript", date: "", bulletPoints: [] },
+      { id: "skill2", title: "React", date: "", bulletPoints: [] },
+    ],
+  },
+];
 
 const EditorPage: React.FC<EditorPageProps> = () => {
   const handleVersionChange = (version: string) => {
@@ -30,11 +79,29 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Panels resized:", sizes);
   };
 
-  const data: ResumeData = {
-    projects: [],
-    experiences: [],
-    skills: []
-  };
+  // const [data, setData] = useState<ResumeData>({
+  //   projects: [],
+  //   experiences: [],
+  //   skills: []
+  // });
+
+  // const updateProjects = (projs: Project[]) => {
+  //   setData((data) => {
+  //     console.log("hey!", data)
+  //     return {...data, projects: projs};
+  //   });
+  //   console.log("setting data");
+  // };
+
+  // const updateExperiences = (exps: Experience[]) => {
+  //   setData({...data, experiences: exps})
+  // }
+
+  // const updateSkills = (skills: string[]) => {
+  //   setData({...data, skills})
+  // }
+
+  const [localSections, setLocalSections] = useState<ResumeSection[]>(defaultSections);
 
   return (
     <div className="h-screen w-full bg-background flex flex-col">
@@ -46,7 +113,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onHistory={handleHistory}
       />
       <div className="flex-1">
-        <EditorLayout onPanelResize={handlePanelResize} resumeData={data} />
+        <EditorLayout onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections}  />
       </div>
     </div>
   );

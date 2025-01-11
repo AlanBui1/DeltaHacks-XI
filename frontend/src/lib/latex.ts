@@ -1,18 +1,20 @@
+export type Project = {
+  title: string;
+  date: string;
+  points: string[];
+};
+
+export type Experience = {
+  title: string;
+  company: string;
+  location: string;
+  date: string;
+  points: string[];
+};
+
 export type ResumeData = {
-  projects: {
-    title: string;
-    skills: string[];
-    date: string;
-    points: string[];
-  }[];
-  experiences: {
-    title: string;
-    company: string;
-    location: string;
-    skills: string[];
-    date: string;
-    points: string[];
-  }[];
+  projects: Project[];
+  experiences: Experience[];
   skills: string[];
 };
 
@@ -171,7 +173,7 @@ export function convertToLatex(data: ResumeData) {
     \\resumeSubHeadingListStart
       ${data.projects.map((proj) =>
       `\\resumeProjectHeading
-          {\\textbf{${proj.title}} $|$ \\emph{${proj.skills.join(", ")}}}{${proj.date}}
+          {\\textbf{${proj.title}}}{${proj.date}}
           \\resumeItemListStart
             ${proj.points.map((pt) => `\\resumeItem{${pt}}`)}
           \\resumeItemListEnd`)}

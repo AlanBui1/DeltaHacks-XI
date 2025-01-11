@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { useRoutes, Routes, Route } from "react-router-dom";
-import Home from "./components/home";
 import routes from "tempo-routes";
 import EditorPage from "./pages/editor";
 

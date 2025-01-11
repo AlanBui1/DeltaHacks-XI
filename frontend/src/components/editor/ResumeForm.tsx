@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -13,7 +13,7 @@ interface EntryFields {
   bulletPoints: string[];
 }
 
-interface ResumeSection {
+export interface ResumeSection {
   id: string;
   title: string;
   type: "experience" | "project" | "skill";
@@ -21,62 +21,16 @@ interface ResumeSection {
 }
 
 interface ResumeFormProps {
-  sections?: ResumeSection[];
+  localSections: ResumeSection[];
+  setLocalSections: Dispatch<SetStateAction<ResumeSection[]>>;
   onSectionUpdate?: (sections: ResumeSection[]) => void;
 }
 
-const defaultSections: ResumeSection[] = [
-  {
-    id: "experience",
-    title: "Experience",
-    type: "experience",
-    entries: [
-      {
-        id: "exp1",
-        title: "Senior Software Engineer",
-        company: "Tech Corp",
-        location: "San Francisco, CA",
-        date: "2020-Present",
-        bulletPoints: [
-          "Led development of core platform features",
-          "Managed team of 5 developers",
-        ],
-      },
-    ],
-  },
-  {
-    id: "projects",
-    title: "Projects",
-    type: "project",
-    entries: [
-      {
-        id: "proj1",
-        title: "E-commerce Platform",
-        date: "2023",
-        bulletPoints: [
-          "Built scalable architecture using React and Node.js",
-          "Implemented payment processing system",
-        ],
-      },
-    ],
-  },
-  {
-    id: "skills",
-    title: "Skills",
-    type: "skill",
-    entries: [
-      { id: "skill1", title: "JavaScript", date: "", bulletPoints: [] },
-      { id: "skill2", title: "React", date: "", bulletPoints: [] },
-    ],
-  },
-];
-
 const ResumeForm: React.FC<ResumeFormProps> = ({
-  sections = defaultSections,
+  localSections,
+  setLocalSections,
   onSectionUpdate = () => {},
 }) => {
-  const [localSections, setLocalSections] =
-    React.useState<ResumeSection[]>(sections);
 
   const addEntry = (sectionId: string) => {
     const section = localSections.find((s) => s.id === sectionId);

@@ -1,0 +1,101 @@
+JavaScript
+TypeScript
+Python
+Java
+C++
+C#
+Ruby
+PHP
+Go
+Swift
+Kotlin
+SQL
+R
+Rust
+Scala
+HTML5
+CSS3
+SASS/SCSS
+Angular
+React
+Vue.js
+Bootstrap
+Material UI
+Tailwind CSS
+jQuery
+Node.js
+Express.js
+Django
+Flask
+Spring Boot
+Ruby on Rails
+ASP.NET
+GraphQL
+REST APIs
+Firebase
+MySQL
+PostgreSQL
+MongoDB
+SQLite
+Redis
+Cassandra
+DynamoDB
+Oracle DB
+Docker
+Kubernetes
+Jenkins
+GitLab CI/CD
+GitHub Actions
+Travis CI
+CircleCI
+Terraform
+Ansible
+Puppet
+AWS
+Google Cloud Platform (GCP)
+Microsoft Azure
+Heroku
+Netlify
+Vercel
+DigitalOcean
+Git
+GitHub
+GitLab
+Bitbucket
+SVN
+JIRA
+Trello
+Slack
+Jest
+Mocha
+Jasmine
+Cypress
+Selenium
+Puppeteer
+Postman
+SoapUI
+Android Development
+iOS Development
+React Native
+Flutter
+TensorFlow
+PyTorch
+Scikit-learn
+Pandas
+NumPy
+Matplotlib
+Keras
+OWASP
+Burp Suite
+Metasploit
+Nessus
+WebSockets
+GraphQL
+OAuth
+WebRTC
+Microservices
+Serverless Architecture
+Event-Driven Architecture
+Agile/Scrum
+Design Patterns
+

@@ -94,8 +94,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       }
     }, name, number, email, linkedin, github);
 
-    console.log(latex);
-    // TODO: render PDF
+    const pdfFile = await fetch("https://TODO", {
+      method: "POST",
+      body: latex,
+    });
   };
 
   const handlePanelResize = (sizes: number[]) => {

@@ -9,7 +9,7 @@ const VoiceflowWidget: React.FC = () => {
       script.onload = () => {
         if (window.voiceflow && window.voiceflow.chat) {
           window.voiceflow.chat.load({
-            verify: { projectID: '6782f74bcbac8c6678499e10' },
+            verify: { projectID: '674b9937da1cb2ab8ae7ef47' },
             url: 'https://general-runtime.voiceflow.com',
             versionID: 'production',
           });

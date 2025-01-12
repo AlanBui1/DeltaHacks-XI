@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Wand2 } from "lucide-react";
+import { LoaderCircle, Wand2 } from "lucide-react";
 
 interface Suggestion {
   id: string;
@@ -19,6 +19,7 @@ interface OptimizationPanelProps {
   onJobDescriptionChange?: (description: string) => void;
   onApplySuggestion?: (suggestion: Suggestion) => void;
   onAnalyze: (description: string) => void;
+  isAnalyzing: boolean;
 }
 
 const defaultSuggestions: Suggestion[] = [
@@ -50,7 +51,8 @@ const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
   suggestions = defaultSuggestions,
   onJobDescriptionChange = () => {},
   onApplySuggestion = () => {},
-  onAnalyze
+  onAnalyze,
+  isAnalyzing
 }) => {
   const [desc, setDesc] = useState("");
 
@@ -78,6 +80,7 @@ const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
         <h3 className="text-lg font-semibold p-4 pb-2">Suggestions</h3>
         <ScrollArea className="h-[calc(100%-2.5rem)] px-4">
           <div className="space-y-4 pb-4">
+            {isAnalyzing && <LoaderCircle className="animate-spin" />}
             {suggestions.map((suggestion) => (
               <Card
                 key={suggestion.id}

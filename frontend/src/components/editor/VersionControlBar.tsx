@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Save, Download, Upload, History, ChevronDown, Cog } from "lucide-react";
+import { Save, Download, Upload, History, ChevronDown, Cog, Loader, LoaderCircle } from "lucide-react";
 
 interface VersionControlBarProps {
   currentVersion?: string;
@@ -15,6 +15,7 @@ interface VersionControlBarProps {
   onExport?: () => void;
   onImport?: (file: File) => void;
   onRender?: () => void;
+  isImporting: boolean;
 }
 
 const VersionControlBar: React.FC<VersionControlBarProps> = ({
@@ -24,6 +25,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
   onExport = () => {},
   onImport = () => {},
   onRender = () => {},
+  isImporting
 }) => {
   const versions = [
     { id: "1", name: "Version 1" },
@@ -60,6 +62,8 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
         </Button> */}
       </div>
       <div className="flex items-center gap-2">
+        {isImporting && <LoaderCircle className="animate-spin" />}
+
         <input type="file" id="import-pdf" className="hidden" accept=".pdf" onChange={(e) => onImport(e.target.files && e.target.files[0])} />
         
         <Button variant="outline" className="p-0">

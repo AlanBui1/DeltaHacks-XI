@@ -39,7 +39,7 @@ def getMatchingWords(inp: str, skills):
     for word in skills:
         escaped_word = re.escape(word)
         pattern = rf'\b{escaped_word}\b'
-        total_freq[word] = re.findall(pattern, inp, re.IGNORECASE)
+        total_freq[word] = len(list(re.findall(pattern, inp, re.IGNORECASE)))
 
     skills = [i for i in skills]
     for i in range(len(skills)):
@@ -169,7 +169,7 @@ class ExtractResumeData(APIView):
       "required": ["languages", "frameworks", "tools", "other"]
     }
   },
-  "required": ["name", "email", "number", "linkedin", "github", "projects", "experiences", "educations", "skills"]
+  "required": ["name", "projects", "experiences", "educations", "skills"]
 })
         
         return Response(json.loads(response), status=status.HTTP_200_OK)

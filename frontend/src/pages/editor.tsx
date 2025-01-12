@@ -109,6 +109,9 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Exporting resume...");
   };
 
+  const [isImporting, setIsImporting] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   const dataToSections: ((data: ResumeData) => ResumeSection[]) = (data) => {
     return [
       {
@@ -167,6 +170,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   };
 
   const handleImport = async (file: File) => {
+    setIsImporting(true);
     const text = await pdfToText(file);
     console.log("step 2")
     const resumeRes = await fetch("http://127.0.0.1:8000/api/extract-resume-data/", {
@@ -179,14 +183,16 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       })
     });
 
-    const resumeData: ResumeData & { name: string, email: string, number: string, github: string, linkedin: string } = await resumeRes.json();
+    const resumeData: ResumeData & { name: string, email: string | undefined, number: string | undefined, github: string | undefined, linkedin: string | undefined } = await resumeRes.json();
 
     setName(resumeData.name);
-    setEmail(resumeData.email);
-    setNumber(resumeData.number);
-    setGithub(resumeData.github);
-    setLinkedin(resumeData.linkedin);
+    setEmail(resumeData.email ?? "");
+    setNumber(resumeData.number ?? "");
+    setGithub(resumeData.github ?? "");
+    setLinkedin(resumeData.linkedin ?? "");
     setLocalSections(dataToSections(resumeData));
+
+    setIsImporting(false);
   };
 
   const extractSkills = (text: string) => [...new Set(text.match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk));
@@ -248,6 +254,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   };
 
   const handleAnalyze = async (description: string) => {
+    setIsAnalyzing(true);
     const skills = localSections[3].entries.map((skill) => skill.title);
     const reorderRes = await fetch("http://127.0.0.1:8000/api/reorder-skills/", {
       method: "POST",
@@ -284,6 +291,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         entries: data.skills.map((skill, i) => ({ id: `skill${i}`, title: skill, date: "", bulletPoints: [] }))
       }
     ]);
+
+    setIsAnalyzing(false);
   };
 
   const [name, setName] = useState("");
@@ -362,6 +371,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onExport={handleExport}
         onImport={handleImport}
         onRender={handleRender}
+        isImporting={isImporting}
       />
       <div className="flex-1">
         <EditorLayout
@@ -380,7 +390,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
-          pdfData={pdfData}  />
+          pdfData={pdfData}
+          isAnalyzing={isAnalyzing}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

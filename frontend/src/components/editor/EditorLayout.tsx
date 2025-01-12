@@ -28,6 +28,7 @@ interface EditorLayoutProps {
   onAnalyze: (desc: string) => void;
   suggestions: any;
   onApplySuggestion: any;
+  isAnalyzing: boolean;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -48,7 +49,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   pdfData,
   onAnalyze,
   suggestions,
-  onApplySuggestion
+  onApplySuggestion,
+  isAnalyzing
 }) => {
   const [jobDescript, setJobDescription] = useState("");
   return (
@@ -80,6 +82,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
             onAnalyze={onAnalyze}
             suggestions={suggestions}
             onApplySuggestion={onApplySuggestion}
+            isAnalyzing={isAnalyzing}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

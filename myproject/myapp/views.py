@@ -60,7 +60,7 @@ class GetKeywords(APIView):
             with open('myapp/skills.txt') as inFile:
                 skills = {line.strip(): 1 for line in inFile.readlines()}
             return skills
-        skills = [i for i in self.getSkills()]
+        skills = [i for i in getSkills()]
 
         return Response({
             'keywords': skills

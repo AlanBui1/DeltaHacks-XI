@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-w28hkfbe#8wn7+)+&p5!313=ksu(_i^^pht=$b20zng@nelez)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['deltahacks-xi.onrender.com']
 
 
 # Application definition
@@ -62,6 +62,7 @@ CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGIN_REGEXES = [
 #     'http://localhost:3030',
 # ]
+
 
 ROOT_URLCONF = 'myproject.urls'
 

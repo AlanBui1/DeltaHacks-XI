@@ -35,7 +35,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
     <div className="w-full h-[60px] bg-white border-b flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-4">
         <h1 className="text-xl font-bold font-mono">Resume Customizer</h1>
-        <Button variant="outline" onClick={onRender}>
+        <Button variant="default" onClick={onRender}>
           <Cog className="h-4 w-4 mr-2" />
           Render Resume
         </Button>
@@ -64,7 +64,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
         </Button> */}
       </div>
 
-      <div className="flex items-center gap-2">
+      {/* <div className="flex items-center gap-2">
         <Button variant="outline" onClick={onImport}>
           <Upload className="h-4 w-4 mr-2" />
           Import
@@ -77,7 +77,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
           <Save className="h-4 w-4 mr-2" />
           Save
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

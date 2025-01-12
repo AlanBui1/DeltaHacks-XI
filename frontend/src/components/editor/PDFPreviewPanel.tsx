@@ -10,6 +10,7 @@ interface PDFPreviewPanelProps {
   onZoomIn?: () => void;
   onZoomOut?: () => void;
   zoomLevel?: number;
+  pdfData: string | null;
 }
 
 const PDFPreviewPanel: React.FC<PDFPreviewPanelProps> = ({
@@ -18,9 +19,10 @@ const PDFPreviewPanel: React.FC<PDFPreviewPanelProps> = ({
   onZoomIn = () => {},
   onZoomOut = () => {},
   zoomLevel = 100,
+  pdfData
 }) => {
   return (
-    <Card className="w-full h-full bg-white flex flex-col">
+    <Card className="w-full h-full bg-white flex flex-col rounded-none">
       {/* Preview Controls */}
       <div className="p-4 border-b flex items-center justify-between">
         <div className="text-lg font-semibold">Resume Preview</div>
@@ -44,13 +46,12 @@ const PDFPreviewPanel: React.FC<PDFPreviewPanelProps> = ({
           className="w-full flex justify-center"
           style={{ transform: `scale(${zoomLevel / 100})` }}
         >
-          <div className="w-[612px] h-[792px] bg-white shadow-lg">
-            {/* Placeholder for PDF content */}
-            <img
-              src={pdfUrl}
-              alt="Resume Preview"
-              className="w-full h-full object-cover"
-            />
+          <div className="w-[475px] aspect-[1/1.414] bg-white shadow-lg">
+            {pdfData ? 
+              <object data={pdfData} type="application/pdf" />
+            :
+              <p className="ml-2 mt-2">Click Render Resume to see the resume!</p>
+            }
           </div>
         </div>
       </ScrollArea>

@@ -56,6 +56,8 @@ const defaultSections: ResumeSection[] = [
 ];
 
 const EditorPage: React.FC<EditorPageProps> = () => {
+  const [pdfData, setPdfData] = useState<string | null>(null);
+
   const handleVersionChange = (version: string) => {
     console.log("Version changed:", version);
   };
@@ -101,6 +103,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     });
 
     // TODO: process pdf file
+
+    const pdfBinary = "";
+
+    setPdfData(`data:application/pdf;base64,${window.btoa(pdfBinary)}`);
   };
 
   const handlePanelResize = (sizes: number[]) => {
@@ -147,7 +153,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onRender={handleRender}
       />
       <div className="flex-1">
-        <EditorLayout onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub}  />
+        <EditorLayout pdfData={pdfData} onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

@@ -13,6 +13,7 @@ interface EntryFields {
   location?: string;
   date: string;
   bulletPoints: string[];
+  display: boolean;
 }
 
 export interface ResumeSection {
@@ -63,6 +64,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
       title: "",
       date: "",
       bulletPoints: section.type === "skill" ? [] : [""],
+      display: true
     };
 
     const updatedSections = localSections.map((s) =>

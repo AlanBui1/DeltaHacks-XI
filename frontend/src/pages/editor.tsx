@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import EditorLayout from "@/components/editor/EditorLayout";
 import VersionControlBar from "@/components/editor/VersionControlBar";
-import { convertToLatex, Experience, Project, ResumeData, skillToType } from "@/lib/latex";
+import { convertToLatex, Experience, Project, ResumeData, skills, skillToType } from "@/lib/latex";
 import { ResumeSection } from "@/components/editor/ResumeForm";
 import VoiceflowWidget from "@/components/editor/VoiceFlow";
 
@@ -18,10 +18,11 @@ const defaultSections: ResumeSection[] = [
       {
         id: "ed1",
         title: "University of Waterloo",
-        company: "Bachelor of Software Engineering",
+        company: "Bachelor of Computer Science",
         location: "Waterloo, ON",
-        date: "2024 -- Present",
+        date: "Sept. 2024 -- Present",
         bulletPoints: [],
+        display: true
       },
     ],
   },
@@ -35,11 +36,12 @@ const defaultSections: ResumeSection[] = [
         title: "Senior Software Engineer",
         company: "Tech Corp",
         location: "San Francisco, CA",
-        date: "2020 -- Present",
+        date: "Feb. 2020 -- Present",
         bulletPoints: [
           "Led development of core platform features",
           "Managed team of 5 developers",
         ],
+        display: true
       },
     ],
   },
@@ -56,6 +58,17 @@ const defaultSections: ResumeSection[] = [
           "Built scalable architecture using React and Node.js",
           "Implemented payment processing system",
         ],
+        display: true
+      },
+      {
+        id: "proj2",
+        title: "Resume Customizer",
+        date: "Jan. 2025 -- Present",
+        bulletPoints: [
+          "Built resume customizer using React and Django",
+          "Integrated with Cohere and Voiceflow",
+        ],
+        display: true
       },
     ],
   },
@@ -64,14 +77,16 @@ const defaultSections: ResumeSection[] = [
     title: "Skills",
     type: "skill",
     entries: [
-      { id: "skill1", title: "JavaScript", date: "", bulletPoints: [] },
-      { id: "skill2", title: "React", date: "", bulletPoints: [] },
-      { id: "skill3", title: "TypeScript", date: "", bulletPoints: [] },
-      { id: "skill4", title: "Angular", date: "", bulletPoints: [] },
-      { id: "skill5", title: "Next.js", date: "", bulletPoints: [] },
-      { id: "skill6", title: "Python", date: "", bulletPoints: [] },
-      { id: "skill7", title: "C", date: "", bulletPoints: [] },
-      { id: "skill8", title: "C++", date: "", bulletPoints: [] },
+      { id: "skill1", title: "JavaScript", date: "", bulletPoints: [], display: true },
+      { id: "skill2", title: "React", date: "", bulletPoints: [], display: true },
+      { id: "skill3", title: "TypeScript", date: "", bulletPoints: [], display: true },
+      { id: "skill4", title: "Angular", date: "", bulletPoints: [], display: true },
+      { id: "skill5", title: "Next.js", date: "", bulletPoints: [], display: true },
+      { id: "skill6", title: "Python", date: "", bulletPoints: [], display: true },
+      { id: "skill7", title: "C", date: "", bulletPoints: [], display: true },
+      { id: "skill8", title: "C++", date: "", bulletPoints: [], display: true },
+      { id: "skill9", title: "PyTorch", date: "", bulletPoints: [], display: true },
+      { id: "skill10", title: "Git", date: "", bulletPoints: [], display: true },
     ],
   },
 ];
@@ -96,6 +111,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Importing resume...");
   };
 
+  const extractSkills = (text: string) => [...new Set(text.match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk));
+
   const handleRender = async () => {
     const latex = convertToLatex({
       educations: localSections[0].entries.map((e) => ({
@@ -111,11 +128,11 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         location: e.location,
         points: e.bulletPoints
       })),
-      projects: localSections[2].entries.map((e) => ({
+      projects: localSections[2].entries.filter((e) => e.display).map((e) => ({
         title: e.title,
         date: e.date,
         points: e.bulletPoints,
-        skills: []
+        skills: extractSkills(e.bulletPoints.join("\n"))
       })),
       skills: {
         languages: localSections[3].entries.filter((en) => en.title in skillToType && skillToType[en.title] === "languages").map((e) => e.title),
@@ -172,8 +189,18 @@ const EditorPage: React.FC<EditorPageProps> = () => {
 
 
 
+    const projectEntries = [...localSections[2].entries];
+    
+    // Sort projects
+    // projectEntries.sort((a, b) => extractSkills(description).filter((s) => extractSkills(b.bulletPoints.join("\n")).includes(s)).length
+    //                               - extractSkills(description).filter((s) => extractSkills(a.bulletPoints.join("\n")).includes(s)).length);
+
     setLocalSections((prev) => [
-      ...localSections.slice(0, 3),
+      ...localSections.slice(0, 2),
+      {
+        ...localSections[2],
+        entries: projectEntries
+      },
       {
         ...localSections[3],
         entries: data.skills.map((skill, i) => ({ id: `skill${i}`, title: skill, date: "", bulletPoints: [] }))

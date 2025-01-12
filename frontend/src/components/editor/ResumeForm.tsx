@@ -18,7 +18,7 @@ interface EntryFields {
 export interface ResumeSection {
   id: string;
   title: string;
-  type: "experience" | "project" | "skill";
+  type: "education" | "experience" | "project" | "skill";
   entries: EntryFields[];
 }
 
@@ -89,6 +89,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
       }
       return section;
     });
+
     setLocalSections(updatedSections);
     onSectionUpdate(updatedSections);
   };

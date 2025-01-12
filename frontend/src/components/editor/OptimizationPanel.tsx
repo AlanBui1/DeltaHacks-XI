@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,7 @@ interface OptimizationPanelProps {
   suggestions?: Suggestion[];
   onJobDescriptionChange?: (description: string) => void;
   onApplySuggestion?: (suggestion: Suggestion) => void;
+  onAnalyze: (description: string) => void;
 }
 
 const defaultSuggestions: Suggestion[] = [
@@ -47,9 +48,16 @@ const defaultSuggestions: Suggestion[] = [
 const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
   jobDescription = "",
   suggestions = defaultSuggestions,
-  onJobDescriptionChange = () => { },
-  onApplySuggestion = () => { },
+  onJobDescriptionChange = () => {},
+  onApplySuggestion = () => {},
+  onAnalyze
 }) => {
+  const [desc, setDesc] = useState("");
+
+  const analyze = () => {
+    onAnalyze(desc);
+  };
+
   return (
     <Card className="w-full h-full bg-white flex flex-col overflow-hidden rounded-none">
       <div className="p-4 border-b">
@@ -57,10 +65,10 @@ const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
         <Textarea
           placeholder="Paste the job description here to get AI-powered suggestions..."
           className="min-h-[200px]"
-          value={jobDescription}
-          onChange={(e) => onJobDescriptionChange(e.target.value)}
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
         />
-        <Button className="w-full mt-4">
+        <Button className="w-full mt-4" onClick={analyze}>
           <Wand2 className="h-4 w-4 mr-2" />
           Analyze & Optimize
         </Button>

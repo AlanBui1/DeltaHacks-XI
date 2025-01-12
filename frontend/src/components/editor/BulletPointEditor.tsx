@@ -18,8 +18,19 @@ interface BulletPointEditorProps {
   entry: EntryFields;
   onChange: (entry: EntryFields) => void;
   onDelete: () => void;
-  type: "experience" | "project" | "skill";
+  type: "education" | "experience" | "project" | "skill";
 }
+
+const input1Name = {
+  education: "School",
+  experience: "Job Title",
+  project: "Project Name"
+};
+
+const input3Name = {
+  education: "Degree",
+  experience: "Company"
+};
 
 const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
   entry,
@@ -78,21 +89,21 @@ const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
           <Input
             value={entry.title}
             onChange={(e) => onChange({ ...entry, title: e.target.value })}
-            placeholder={type === "experience" ? "Job Title" : "Project Name"}
+            placeholder={input1Name[type]}
           />
           <Input
             value={entry.date}
             onChange={(e) => onChange({ ...entry, date: e.target.value })}
-            placeholder="Date Range"
+            placeholder="Date"
           />
-          {type === "experience" && (
+          {(type === "experience" || type === "education") && (
             <>
               <Input
                 value={entry.company}
                 onChange={(e) =>
                   onChange({ ...entry, company: e.target.value })
                 }
-                placeholder="Company"
+                placeholder={input3Name[type]}
               />
               <Input
                 value={entry.location}
@@ -144,7 +155,7 @@ const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
             className="text-red-500 hover:text-red-700"
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            Delete {type === "experience" ? "Experience" : "Project"}
+            Delete {type === "education" ? "Education" : (type === "experience" ? "Experience" : "Project")}
           </Button>
         </div>
       </div>

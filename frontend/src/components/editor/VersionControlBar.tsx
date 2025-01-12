@@ -35,10 +35,6 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
     <div className="w-full h-[60px] bg-white border-b flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-4">
         <h1 className="text-xl font-bold font-mono">Resume Customizer</h1>
-        <Button variant="default" onClick={onRender}>
-          <Cog className="h-4 w-4 mr-2" />
-          Render Resume
-        </Button>
         {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[150px] justify-between">
@@ -63,7 +59,10 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
           History
         </Button> */}
       </div>
-
+      <Button variant="default" onClick={onRender}>
+        <Cog className="h-4 w-4 mr-2" />
+        Render Resume
+      </Button>
       {/* <div className="flex items-center gap-2">
         <Button variant="outline" onClick={onImport}>
           <Upload className="h-4 w-4 mr-2" />

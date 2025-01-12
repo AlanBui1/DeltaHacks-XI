@@ -1,6 +1,5 @@
 import io
 import requests
-from pylatex import Document
 
 def generate_pdf(tex_file_name):
     # Read the LaTeX content from the .tex file

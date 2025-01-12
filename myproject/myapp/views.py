@@ -1,8 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import HttpResponse
 import requests
-from pylatex import Document
+import subprocess
+import os
+
 
 def getSkills():
     with open('myapp/skills.txt') as inFile:
@@ -64,7 +67,6 @@ class ReorderSkills(APIView):
         all_skills = getSkills()
 
         skills = request.data.get('skills')
-        skills = skills.strip().split(', ')
 
         description = request.data.get('description')
         description = description.strip()
@@ -83,14 +85,22 @@ class ReorderSkills(APIView):
 
 class RenderPDF(APIView):
     def post(self, request):
-        latex_text = request.data.get('latex')
+        latex_text = request.body.decode("utf-8")
 
-        doc = Document()
-        doc.append(latex_text)
+        with open("resume.tex", "w") as f:
+            f.write(latex_text)
 
-        pdf_bytes = doc.dumps_pdf()
+        cmd = ['pdflatex', '-interaction', 'nonstopmode', 'resume.tex']
+        proc = subprocess.Popen(cmd)
+        proc.communicate()
 
-        return Response({
-            'Content-Type': 'application/pdf',
-            'file':  pdf_bytes
-        }, status=status.HTTP_200_OK)
+        retcode = proc.returncode
+        if not retcode == 0:
+            os.unlink('resume.pdf')
+            raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd))) 
+
+        os.unlink('resume.tex')
+        os.unlink('resume.log')
+
+        with open("resume.pdf", "rb") as pdf_file:
+            return HttpResponse(pdf_file.read(), content_type="application/pdf")

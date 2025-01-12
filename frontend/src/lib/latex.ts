@@ -1,3 +1,10 @@
+export type Education = {
+  school: string;
+  date: string;
+  location: string;
+  degree: string;
+}
+
 export type Project = {
   title: string;
   date: string;
@@ -16,12 +23,64 @@ export type Experience = {
 export type ResumeData = {
   projects: Project[];
   experiences: Experience[];
+  educations: Education[];
   skills: {
     languages: string[],
     frameworks: string[],
     tools: string[],
     other: string[]
   };
+};
+
+export const skillToType: Record<string, "languages" | "frameworks" | "tools"> = {
+  // Languages
+  JavaScript: "languages",
+  TypeScript: "languages",
+  Python: "languages",
+  Java: "languages",
+  C: "languages",
+  "C++": "languages",
+  "C#": "languages",
+  Ruby: "languages",
+  PHP: "languages",
+  Go: "languages",
+  Rust: "languages",
+  Swift: "languages",
+  Kotlin: "languages",
+  Dart: "languages",
+  SQL: "languages",
+
+  // Frameworks
+  React: "frameworks",
+  Angular: "frameworks",
+  Vue: "frameworks",
+  Svelte: "frameworks",
+  "Next.js": "frameworks",
+  "Nuxt.js": "frameworks",
+  Express: "frameworks",
+  Django: "frameworks",
+  Flask: "frameworks",
+  Spring: "frameworks",
+  "Ruby on Rails": "frameworks",
+  Laravel: "frameworks",
+  "ASP.NET": "frameworks",
+  FastAPI: "frameworks",
+
+  // Tools
+  Git: "tools",
+  Docker: "tools",
+  Kubernetes: "tools",
+  Webpack: "tools",
+  Babel: "tools",
+  ESLint: "tools",
+  Prettier: "tools",
+  Jenkins: "tools",
+  CircleCI: "tools",
+  TravisCI: "tools",
+  VSCode: "tools",
+  IntelliJ: "tools",
+  Postman: "tools",
+  Figma: "tools",
 };
 
 export function convertToLatex(data: ResumeData, name: string, number: string, email: string, linkedin: string, github: string) {
@@ -151,12 +210,10 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
 %-----------EDUCATION-----------
 \\section{Education}
   \\resumeSubHeadingListStart
-    \\resumeSubheading
-      {Southwestern University}{Georgetown, TX}
-      {Bachelor of Arts in Computer Science, Minor in Business}{Aug. 2018 -- May 2021}
-    \\resumeSubheading
-      {Blinn College}{Bryan, TX}
-      {Associate's in Liberal Arts}{Aug. 2014 -- May 2018}
+    ${data.educations.map((ed) =>
+    `\\resumeSubheading
+    {${ed.school}}{${ed.location}}
+    {${ed.degree}}{${ed.date}}`)}
   \\resumeSubHeadingListEnd
 
 
@@ -178,7 +235,7 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
 %-----------PROJECTS-----------
 \\section{Projects}
     \\resumeSubHeadingListStart
-      ${data.projects.map((proj) =>
+      ${data.projects.slice(0, 2).map((proj) =>
       `\\resumeProjectHeading
           {\\textbf{${proj.title}}}{${proj.date}}
           \\resumeItemListStart

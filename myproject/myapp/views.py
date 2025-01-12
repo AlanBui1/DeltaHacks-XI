@@ -6,6 +6,7 @@ import requests
 import subprocess
 import os
 import cohere
+import re
 import json
 
 def talkToCohere(system_message, message, schema=None):
@@ -36,13 +37,17 @@ def getMatchingWords(inp: str, skills):
 
     total_freq = {}
     for word in skills:
-        total_freq[word] = inp.count(word)
+        escaped_word = re.escape(word)
+        pattern = rf'\b{escaped_word}\b'
+        total_freq[word] = re.findall(pattern, inp, re.IGNORECASE)
 
     skills = [i for i in skills]
     for i in range(len(skills)):
         for j in range(i+1, len(skills)):
             word1 = skills[i]
             word2 = skills[j]
+            if len(word1.split()) == len(word2.split()):
+                continue
             
             if word1 in word2:
                 total_freq[word1] -= total_freq[word2]
@@ -82,18 +87,23 @@ class ExtractResumeData(APIView):
     def post(self, request):
         text = request.data.get('text')
 
-        response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format. Don't add any additional info. Give dates in Month Year format. Use date ranges wherever possible (e.g., Jan. 2024 -- Present).""",
-                     f"Respond in JSON format. Here's the resume:\n\n{text}",
+        response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format.""",
+                     f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
                      {
   "type": "object",
   "properties": {
+    "name": { "type": "string" },
+    "email": { "type": "string" },
+    "number": { "type": "string" },
+    "linkedin": { "type": "string" },
+    "github": { "type": "string" },
     "projects": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
           "title": { "type": "string" },
-          "date": { "type": "string", "format": "date" },
+          "date": { "type": "string" },
           "skills": {
             "type": "array",
             "items": { "type": "string" }
@@ -114,7 +124,7 @@ class ExtractResumeData(APIView):
           "title": { "type": "string" },
           "company": { "type": "string" },
           "location": { "type": "string" },
-          "date": { "type": "string", "format": "date" },
+          "date": { "type": "string" },
           "points": {
             "type": "array",
             "items": { "type": "string" }
@@ -129,7 +139,7 @@ class ExtractResumeData(APIView):
         "type": "object",
         "properties": {
           "school": { "type": "string" },
-          "date": { "type": "string", "format": "date" },
+          "date": { "type": "string" },
           "location": { "type": "string" },
           "degree": { "type": "string" }
         },
@@ -159,7 +169,7 @@ class ExtractResumeData(APIView):
       "required": ["languages", "frameworks", "tools", "other"]
     }
   },
-  "required": ["projects", "experiences", "educations", "skills"]
+  "required": ["name", "email", "number", "linkedin", "github", "projects", "experiences", "educations", "skills"]
 })
         
         return Response(json.loads(response), status=status.HTTP_200_OK)

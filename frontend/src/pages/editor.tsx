@@ -6,6 +6,7 @@ import VersionControlBar from "@/components/editor/VersionControlBar";
 import { convertToLatex, Experience, Project, ResumeData, skills, skillToType } from "@/lib/latex";
 import { ResumeSection } from "@/components/editor/ResumeForm";
 import VoiceflowWidget from "@/components/editor/VoiceFlow";
+import Suggestion from "@/components/editor/OptimizationPanel"
 import pdfToText from "react-pdftotext";
 
 interface EditorPageProps {}
@@ -178,8 +179,13 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       })
     });
 
-    const resumeData: ResumeData = await resumeRes.json();
+    const resumeData: ResumeData & { name: string, email: string, number: string, github: string, linkedin: string } = await resumeRes.json();
 
+    setName(resumeData.name);
+    setEmail(resumeData.email);
+    setNumber(resumeData.number);
+    setGithub(resumeData.github);
+    setLinkedin(resumeData.linkedin);
     setLocalSections(dataToSections(resumeData));
   };
 
@@ -310,6 +316,42 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   //   setData({...data, skills})
   // }
 
+  const onApplySuggestion = (sug: any) => {
+    const newArray = suggestionData.filter(function (ele) {
+      return ele.id !== sug.id;
+    });
+
+    setSuggestionData(newArray);
+
+    const getNewEntries = (originalEntries: any) => {
+      const ret = [];
+
+      for (let entry of originalEntries){
+        for (let bullet in entry['bulletPoints']){
+          entry['bulletPoints'][bullet] = entry['bulletPoints'][bullet].replace(sug.original, sug.improved)
+        }
+        ret.push(entry)
+      }
+
+      return ret;
+    }
+
+  
+
+    setLocalSections([
+      localSections[0],
+      {
+        ...localSections[1],
+        entries: getNewEntries(localSections[1]['entries'])
+      },
+      {
+        ...localSections[2],
+        entries: getNewEntries(localSections[2]['entries'])
+      },
+      localSections[3]
+    ]);
+  }
+
   const [localSections, setLocalSections] = useState<ResumeSection[]>(defaultSections);
 
   return (
@@ -338,7 +380,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
-          pdfData={pdfData} />
+          pdfData={pdfData}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

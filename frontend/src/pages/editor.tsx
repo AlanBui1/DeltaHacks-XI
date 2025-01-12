@@ -110,6 +110,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Importing resume...");
   };
 
+  const extractSkills = (text: string) => [...new Set(text.match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk));
+
   const handleRender = async () => {
     const latex = convertToLatex({
       educations: localSections[0].entries.map((e) => ({
@@ -129,7 +131,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         title: e.title,
         date: e.date,
         points: e.bulletPoints,
-        skills: [...new Set(e.bulletPoints.join("\n").match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk))
+        skills: extractSkills(e.bulletPoints.join("\n"))
       })),
       skills: {
         languages: localSections[3].entries.filter((en) => en.title in skillToType && skillToType[en.title] === "languages").map((e) => e.title),
@@ -181,8 +183,18 @@ const EditorPage: React.FC<EditorPageProps> = () => {
 
     const data = await reorderRes.json();
 
+    const projectEntries = [...localSections[2].entries];
+    
+    // Sort projects
+    // projectEntries.sort((a, b) => extractSkills(description).filter((s) => extractSkills(b.bulletPoints.join("\n")).includes(s)).length
+    //                               - extractSkills(description).filter((s) => extractSkills(a.bulletPoints.join("\n")).includes(s)).length);
+
     setLocalSections((prev) => [
-      ...localSections.slice(0, 3),
+      ...localSections.slice(0, 2),
+      {
+        ...localSections[2],
+        entries: projectEntries
+      },
       {
         ...localSections[3],
         entries: data.skills.map((skill, i) => ({ id: `skill${i}`, title: skill, date: "", bulletPoints: [] }))

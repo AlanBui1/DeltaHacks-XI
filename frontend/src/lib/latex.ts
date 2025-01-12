@@ -143,6 +143,8 @@ export const skills = [
 
 export function convertToLatex(data: ResumeData, name: string, number: string, email: string, linkedin: string, github: string) {
   console.log(data)
+
+
   return `
   %-------------------------
 % Resume in Latex
@@ -270,8 +272,8 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
   \\resumeSubHeadingListStart
     ${data.educations.map((ed) =>
     `\\resumeSubheading
-    {${ed.school}}{${ed.location}}
-    {${ed.degree}}{${ed.date}}`).join("\n")}
+    {${ed.school.replace("&", "\\&").replace("$", "\\$")}}{${ed.location.replace("&", "\\&").replace("$", "\\$")}}
+    {${ed.degree.replace("&", "\\&").replace("$", "\\$")}}{${ed.date.replace("&", "\\&").replace("$", "\\$")}}`).join("\n")}
   \\resumeSubHeadingListEnd
 
 
@@ -281,10 +283,10 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
 
   ${data.experiences.map((exp) =>
     `\\resumeSubheading
-        {${exp.title}}{${exp.date}}
-        {${exp.company}}{${exp.location}}
+        {${exp.title.replace("&", "\\&").replace("$", "\\$")}}{${exp.date.replace("&", "\\&").replace("$", "\\$")}}
+        {${exp.company.replace("&", "\\&").replace("$", "\\$")}}{${exp.location.replace("&", "\\&").replace("$", "\\$")}}
         \\resumeItemListStart
-          ${exp.points.map((pt) => `\\resumeItem{${pt}}`).join("\n")}
+          ${exp.points.map((pt) => `\\resumeItem{${pt.replace("&", "\\&").replace("$", "\\$")}}`).join("\n")}
         \\resumeItemListEnd`).join("\n")}
 
   \\resumeSubHeadingListEnd
@@ -295,9 +297,9 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
     \\resumeSubHeadingListStart
       ${data.projects.map((proj) =>
       `\\resumeProjectHeading
-          {\\textbf{${proj.title}} $|$ \\emph{${proj.skills.join(", ")}}}{${proj.date}}
+          {\\textbf{${proj.title.replace("&", "\\&").replace("$", "\\$")}} $|$ \\emph{${proj.skills.map((skill) => skill.replace("&", "\\&").replace("$", "\\$")).join(", ")}}}{${proj.date.replace("&", "\\&").replace("$", "\\$")}}
           \\resumeItemListStart
-            ${proj.points.map((pt) => `\\resumeItem{${pt}}\n`).join("\n")}
+            ${proj.points.map((pt) => `\\resumeItem{${pt.replace("&", "\\&").replace("$", "\\$")}}\n`).join("\n")}
           \\resumeItemListEnd`).join("\n")}
     \\resumeSubHeadingListEnd
 
@@ -308,10 +310,10 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
 \\section{Technical Skills}
  \\begin{itemize}[leftmargin=0.15in, label={}]
     \\small{\\item{
-     \\textbf{Languages}{: ${data.skills.languages.join(", ")}} \\\\
-     \\textbf{Frameworks}{: ${data.skills.frameworks.join(", ")}} \\\\
-     \\textbf{Developer Tools}{: ${data.skills.tools.join(", ")}} \\\\
-     \\textbf{Other}{: ${data.skills.other.join(", ")}}
+     \\textbf{Languages}{: ${data.skills.languages.map((lang) => lang.replace("&", "\\&").replace("$", "\\$")).join(", ")}} \\\\
+     \\textbf{Frameworks}{: ${data.skills.frameworks.map((fw) => fw.replace("&", "\\&").replace("$", "\\$")).join(", ")}} \\\\
+     \\textbf{Developer Tools}{: ${data.skills.tools.map((tool) => tool.replace("&", "\\&").replace("$", "\\$")).join(", ")}} \\\\
+     \\textbf{Other}{: ${data.skills.other.map((other) => other.replace("&", "\\&").replace("$", "\\$")).join(", ")}}
     }}
  \\end{itemize}
 

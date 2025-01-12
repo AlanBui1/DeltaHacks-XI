@@ -6,6 +6,7 @@ import VersionControlBar from "@/components/editor/VersionControlBar";
 import { convertToLatex, Experience, Project, ResumeData, skills, skillToType } from "@/lib/latex";
 import { ResumeSection } from "@/components/editor/ResumeForm";
 import VoiceflowWidget from "@/components/editor/VoiceFlow";
+import pdfToText from "react-pdftotext";
 
 interface EditorPageProps {}
 
@@ -107,8 +108,79 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Exporting resume...");
   };
 
-  const handleImport = () => {
-    console.log("Importing resume...");
+  const dataToSections: ((data: ResumeData) => ResumeSection[]) = (data) => {
+    return [
+      {
+        id: "education",
+        title: "Education",
+        type: "education",
+        entries: data.educations.map((ed, i) => ({
+          id: `ed${i}`,
+          title: ed.school,
+          company: ed.degree,
+          location: ed.location,
+          date: ed.date,
+          bulletPoints: [],
+          display: true
+        }))
+      },
+      {
+        id: "experience",
+        title: "Experience",
+        type: "experience",
+        entries: data.experiences.map((exp, i) => ({
+          id: `exp${i}`,
+          title: exp.title,
+          company: exp.company,
+          location: exp.location,
+          date: exp.date,
+          bulletPoints: exp.points,
+          display: true
+        })),
+      },
+      {
+        id: "projects",
+        title: "Projects",
+        type: "project",
+        entries: data.projects.map((proj, i) => ({
+          id: `proj${i}`,
+          title: proj.title,
+          date: proj.date,
+          bulletPoints: proj.points,
+          display: true
+        })),
+      },
+      {
+        id: "skills",
+        title: "Skills",
+        type: "skill",
+        entries: [...data.skills.languages, ...data.skills.frameworks, ...data.skills.tools, ...data.skills.other].map((skill, i) => ({
+          id: `skill${i}`,
+          title: skill,
+          date: "",
+          bulletPoints: [],
+          display: true
+        }))
+      }
+    ]
+  };
+
+  const handleImport = async (file: File) => {
+    const text = await pdfToText(file);
+    console.log("step 2")
+    const resumeRes = await fetch("http://127.0.0.1:8000/api/extract-resume-data/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text
+      })
+    });
+
+    const resumeData: ResumeData = await resumeRes.json();
+
+    setLocalSections(dataToSections(resumeData));
   };
 
   const extractSkills = (text: string) => [...new Set(text.match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk));
@@ -214,6 +286,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
 
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+
   // const [data, setData] = useState<ResumeData>({
   //   projects: [],
   //   experiences: [],
@@ -248,8 +322,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onRender={handleRender}
       />
       <div className="flex-1">
-        <EditorLayout 
-          pdfData={pdfData} 
+        <EditorLayout
           onPanelResize={handlePanelResize} 
           localSections={localSections} 
           setLocalSections={setLocalSections} 
@@ -264,7 +337,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           github={github} 
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
-          suggestions={suggestionData}  />
+          suggestions={suggestionData}
+          pdfData={pdfData} />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

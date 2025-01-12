@@ -46,7 +46,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   setGithub,
   pdfData,
   onAnalyze,
-  suggestions
+  suggestions,
 }) => {
   const [jobDescript, setJobDescription] = useState("");
   return (

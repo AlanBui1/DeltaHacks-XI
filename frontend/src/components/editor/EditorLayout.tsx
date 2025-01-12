@@ -27,6 +27,7 @@ interface EditorLayoutProps {
   pdfData: string;
   onAnalyze: (desc: string) => void;
   suggestions: any;
+  onApplySuggestion: any;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -46,7 +47,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   setGithub,
   pdfData,
   onAnalyze,
-  suggestions
+  suggestions,
+  onApplySuggestion
 }) => {
   const [jobDescript, setJobDescription] = useState("");
   return (
@@ -77,6 +79,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
             onJobDescriptionChange={(newValue) => {setJobDescription(newValue)}}
             onAnalyze={onAnalyze}
             suggestions={suggestions}
+            onApplySuggestion={onApplySuggestion}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

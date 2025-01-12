@@ -5,7 +5,21 @@ from django.http import HttpResponse
 import requests
 import subprocess
 import os
+import cohere
 
+def talkToCohere(system_message, message):
+    co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
+
+    # Add the messages
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": message},
+    ]
+
+    # Generate the response
+    response = co.chat(model="command-r-plus-08-2024", messages=messages)
+
+    return response.message.content[0].text
 
 def getSkills():
     with open('myapp/skills.txt') as inFile:
@@ -71,6 +85,8 @@ class ReorderSkills(APIView):
         description = request.data.get('description')
         description = description.strip()
 
+        sections = request.data.get('localSections')
+
         related_skills_freq = getMatchingWords(description, all_skills)
         for skill in skills:
             if skill not in related_skills_freq:
@@ -78,8 +94,107 @@ class ReorderSkills(APIView):
         
         skills.sort(key = lambda word: -related_skills_freq[word])
 
+        def formatBullets(s):
+            ret = """## Task and Context
+You are an assistant who is an expert at writing bullet points and interpreting job descriptions. 
+You are given a job description and a series of bullet points. 
+
+First, determine the key details of the job. This includes behavioural traits as well as technical skills.
+Then, your task is to rewrite the bullet points to incorporate as many of the key details of the job description as possible.
+
+Bullet points are given in the following format:
+
+Section: {SECTION_NAME}
+Bullets:
+bullets listed with a newline for each bullet point
+
+## Style Guide
+Be professional. 
+Try to write bullet points that highlight a task, action, and result WITHOUT introducing new details into the project. 
+Incorporate key details from the job description if applicable.
+Include a reason for the change with citations to the job description.
+
+##### For each modification you would like to make, YOU MUST respond with the following format EXACTLY. DO NOT OUTPUT ANYTHING ELSE:
+
+{
+    id: {ID},
+    section: {SECTION_NAME},
+    original: {ORIGINAL_BULLET_POINT},
+    improved: {IMPROVED_BULLET_POINT},
+    reason: {REASON},
+},
+
+
+
+"""
+            ret += f"### Job Description: {description}\n\n\n"
+
+            SECTIONS = ['Education', 'Experience', 'Projects', 'Skills']
+            for i in [1, 2]:
+                for entry in s[i]['entries']:
+                    curSection = SECTIONS[i]
+
+                    ret += f"Section: {curSection}\n"
+                    ret += "Bullets:\n"
+
+                    for bullet in entry['bulletPoints']:
+                        ret += f"{bullet}\n"
+                    ret += "\n"
+                
+            return ret
+
+        def getSystemMessage():
+            """## Task and Context
+You are an assistant who is an expert at writing bullet points and interpreting job descriptions. 
+You are given a job description and a series of bullet points. 
+
+First, determine the key details of the job. This includes behavioural traits as well as technical skills.
+Then, your task is to rewrite the bullet points to incorporate as many of the key details of the job description as possible.
+
+Bullet points are given in the following format:
+
+Section: {SECTION_NAME}
+Bullets:
+bullets listed with a newline for each bullet point
+
+## Style Guide
+Be professional. 
+Try to write bullet points that highlight a task, action, and result WITHOUT introducing new details into the project. 
+Incorporate key details from the job description if applicable.
+Include a reason for the change with citations to the job description.
+
+##### For each modification you would like to make, YOU MUST respond with the following format EXACTLY. DO NOT OUTPUT ANYTHING ELSE:
+
+{
+    id: {ID},
+    section: {SECTION_NAME},
+    original: {ORIGINAL_BULLET_POINT},
+    improved: {IMPROVED_BULLET_POINT},
+    reason: {REASON},
+},"""
+
+        messageToPrompt = formatBullets(sections)
+        systemMessageToPrompt = getSystemMessage()
+
+        fromCohere = talkToCohere(systemMessageToPrompt, messageToPrompt)
+
+        # print(fromCohere)
+
+        changes = []
+
+        for line in fromCohere.split('\n'):
+            line = line.strip()
+            if ':' in line:
+                KEY = line[:line.index(':')]
+                if KEY == "id":
+                    changes.append({})
+                VALUE = line[line.index(':')+2: len(line)-1]
+                changes[-1][KEY] = VALUE
+            
+
         return Response({
-            'skills': skills
+            'skills': skills,
+            'changes': changes
         }, status=status.HTTP_200_OK)
     
 

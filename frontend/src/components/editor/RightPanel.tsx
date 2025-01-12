@@ -2,7 +2,6 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wand2 } from "lucide-react";
-import SuggestionsList from "./SuggestionsList";
 
 interface RightPanelProps {
   jobDescription?: string;
@@ -32,7 +31,6 @@ const RightPanel = ({
         </div>
       </Card>
 
-      <SuggestionsList />
     </div>
   );
 };

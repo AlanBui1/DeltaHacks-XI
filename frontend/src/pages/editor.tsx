@@ -78,6 +78,7 @@ const defaultSections: ResumeSection[] = [
 
 const EditorPage: React.FC<EditorPageProps> = () => {
   const [pdfData, setPdfData] = useState<string | null>(null);
+  const [suggestionData, setSuggestionData] = useState([]);
 
   const handleVersionChange = (version: string) => {
     console.log("Version changed:", version);
@@ -157,7 +158,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       method: "POST",
       body: JSON.stringify({
         skills,
-        description
+        description,
+        localSections
       }),
       headers: {
         "Content-Type": "application/json"
@@ -165,6 +167,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     });
 
     const data = await reorderRes.json();
+    // console.log(data);
+    setSuggestionData(data['changes']);
+
+
 
     setLocalSections((prev) => [
       ...localSections.slice(0, 3),
@@ -230,7 +236,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setLinkedin={setLinkedin} 
           github={github} 
           setGithub={setGithub}
-          onAnalyze={handleAnalyze}  />
+          onAnalyze={handleAnalyze}
+          suggestions={suggestionData}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

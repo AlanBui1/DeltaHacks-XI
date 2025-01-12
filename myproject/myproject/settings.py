@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-w28hkfbe#8wn7+)+&p5!313=ksu(_i^^pht=$b20zng@nelez)
 DEBUG = True
 
 # ALLOWED_HOSTS = ['deltahacks-xi.onrender.com', '127.0.0.1:5174']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 

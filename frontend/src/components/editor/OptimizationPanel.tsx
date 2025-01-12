@@ -47,8 +47,8 @@ const defaultSuggestions: Suggestion[] = [
 const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
   jobDescription = "",
   suggestions = defaultSuggestions,
-  onJobDescriptionChange = () => {},
-  onApplySuggestion = () => {},
+  onJobDescriptionChange = () => { },
+  onApplySuggestion = () => { },
 }) => {
   return (
     <Card className="w-full h-full bg-white flex flex-col overflow-hidden rounded-none">

@@ -153,7 +153,22 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onRender={handleRender}
       />
       <div className="flex-1">
-        <EditorLayout pdfData={pdfData} onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub}  />
+        <EditorLayout 
+          pdfData={pdfData} 
+          onPanelResize={handlePanelResize} 
+          localSections={localSections} 
+          setLocalSections={setLocalSections} 
+          name={name} 
+          setName={setName} 
+          number={number} 
+          setNumber={setNumber} 
+          email={email} 
+          setEmail={setEmail} 
+          linkedin={linkedin} 
+          setLinkedin={setLinkedin} 
+          github={github} 
+          setGithub={setGithub}
+          analyze={handleAnalyze}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

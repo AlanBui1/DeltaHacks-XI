@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState }  from "react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -25,6 +25,7 @@ interface EditorLayoutProps {
   github: string;
   setGithub: Dispatch<SetStateAction<string>>;
   pdfData: string;
+  analyze: any;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -42,8 +43,10 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   setLinkedin,
   github,
   setGithub,
-  pdfData
+  pdfData,
+  analyze = () => {}
 }) => {
+  const [jobDescript, setJobDescription] = useState("");
   return (
     <div className="h-[calc(100vh-60px)] bg-gray-100">
       <ResizablePanelGroup
@@ -67,7 +70,11 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
 
         {/* Right Panel - Optimization */}
         <ResizablePanel defaultSize={defaultSizes[2]} minSize={20}>
-          <OptimizationPanel />
+          <OptimizationPanel 
+            jobDescription={jobDescript} 
+            onJobDescriptionChange={(newValue) => {setJobDescription(newValue)}}
+            onApplySuggestion={() => {analyze()}}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, GripVertical, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 interface EntryFields {
   id: string;
@@ -12,6 +14,7 @@ interface EntryFields {
   location?: string;
   date: string;
   bulletPoints: string[];
+  display: boolean;
 }
 
 interface BulletPointEditorProps {
@@ -158,6 +161,12 @@ const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
             Delete {type === "education" ? "Education" : (type === "experience" ? "Experience" : "Project")}
           </Button>
         </div>
+        {type === "project" &&
+          <div className="flex items-center space-x-2">
+            <Checkbox id="display" checked={entry.display} onCheckedChange={(v) => onChange({...entry, display: v.valueOf() as boolean})} />
+            <Label htmlFor="display" className="text-sm">Display</Label>
+          </div>
+        }
       </div>
     </Card>
   );

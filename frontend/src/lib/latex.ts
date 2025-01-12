@@ -83,6 +83,64 @@ export const skillToType: Record<string, "languages" | "frameworks" | "tools"> =
   Figma: "tools",
 };
 
+export const skills = [
+  ...Object.keys(skillToType),
+  // Methodologies and Paradigms
+  "Agile",
+  "Scrum",
+  "Kanban",
+  "DevOps",
+  "CI/CD",
+  "TDD (Test-Driven Development)",
+  "Microservices",
+  "Event-Driven Architecture",
+
+  // Libraries
+  "Lodash",
+  "Axios",
+  "Moment.js",
+  "Tailwind CSS",
+  "Bootstrap",
+  "jQuery",
+
+  // Platforms
+  "AWS",
+  "Azure",
+  "Google Cloud Platform (GCP)",
+  "Heroku",
+  "Netlify",
+  "Vercel",
+  "Firebase",
+
+  // Data-related
+  "GraphQL",
+  "REST APIs",
+  "Kafka",
+  "Redis",
+  "Elasticsearch",
+  "RabbitMQ",
+
+  // Testing
+  "Jest",
+  "Mocha",
+  "Chai",
+  "Cypress",
+  "Selenium",
+  "Puppeteer",
+
+  // Miscellaneous
+  "Nginx",
+  "Apache",
+  "Linux",
+  "Terraform",
+  "Ansible",
+  "Chef",
+  "Puppet",
+  "Cohere",
+  "Voiceflow",
+  "Node.js"
+];
+
 export function convertToLatex(data: ResumeData, name: string, number: string, email: string, linkedin: string, github: string) {
   console.log(data)
   return `
@@ -213,7 +271,7 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
     ${data.educations.map((ed) =>
     `\\resumeSubheading
     {${ed.school}}{${ed.location}}
-    {${ed.degree}}{${ed.date}}`)}
+    {${ed.degree}}{${ed.date}}`).join("\n")}
   \\resumeSubHeadingListEnd
 
 
@@ -227,7 +285,7 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
         {${exp.company}}{${exp.location}}
         \\resumeItemListStart
           ${exp.points.map((pt) => `\\resumeItem{${pt}}`).join("\n")}
-        \\resumeItemListEnd`)}
+        \\resumeItemListEnd`).join("\n")}
 
   \\resumeSubHeadingListEnd
 
@@ -235,12 +293,12 @@ export function convertToLatex(data: ResumeData, name: string, number: string, e
 %-----------PROJECTS-----------
 \\section{Projects}
     \\resumeSubHeadingListStart
-      ${data.projects.slice(0, 2).map((proj) =>
+      ${data.projects.map((proj) =>
       `\\resumeProjectHeading
-          {\\textbf{${proj.title}}}{${proj.date}}
+          {\\textbf{${proj.title}} $|$ \\emph{${proj.skills.join(", ")}}}{${proj.date}}
           \\resumeItemListStart
             ${proj.points.map((pt) => `\\resumeItem{${pt}}\n`).join("\n")}
-          \\resumeItemListEnd`)}
+          \\resumeItemListEnd`).join("\n")}
     \\resumeSubHeadingListEnd
 
 

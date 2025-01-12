@@ -25,6 +25,7 @@ interface EditorLayoutProps {
   github: string;
   setGithub: Dispatch<SetStateAction<string>>;
   pdfData: string;
+  onAnalyze: (desc: string) => void;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -42,7 +43,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   setLinkedin,
   github,
   setGithub,
-  pdfData
+  pdfData,
+  onAnalyze
 }) => {
   return (
     <div className="h-[calc(100vh-60px)] bg-gray-100">
@@ -67,7 +69,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
 
         {/* Right Panel - Optimization */}
         <ResizablePanel defaultSize={defaultSizes[2]} minSize={20}>
-          <OptimizationPanel />
+          <OptimizationPanel onAnalyze={onAnalyze} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

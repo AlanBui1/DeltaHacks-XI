@@ -41,20 +41,11 @@ const PDFPreviewPanel: React.FC<PDFPreviewPanelProps> = ({
       </div>
 
       {/* PDF Preview Area */}
-      <ScrollArea className="flex-1 p-4">
-        <div
-          className="w-full flex justify-center"
-          style={{ transform: `scale(${zoomLevel / 100})` }}
-        >
-          <div className="w-[475px] aspect-[1/1.414] bg-white shadow-lg">
-            {pdfData ? 
-              <object data={pdfData} type="application/pdf" />
-            :
-              <p className="ml-2 mt-2">Click Render Resume to see the resume!</p>
-            }
-          </div>
-        </div>
-      </ScrollArea>
+      {pdfData ? 
+        <object data={pdfData} type="application/pdf" className="w-full h-full" />
+      :
+        <p className="ml-2 mt-2 italic text-center">Click Render Resume to see your resume!</p>
+      }
     </Card>
   );
 };

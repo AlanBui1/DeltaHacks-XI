@@ -412,13 +412,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
-<<<<<<< HEAD
           onApplySuggestion={onApplySuggestion}
-          moveUp ={moveUp}  />
-=======
+          moveUp ={moveUp}  
           pdfData={pdfData}
           isAnalyzing={isAnalyzing}  />
->>>>>>> 99cb0fbfbc7c5a90bd93b0edbac75406edf281be
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

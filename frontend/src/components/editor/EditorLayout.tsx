@@ -29,6 +29,7 @@ interface EditorLayoutProps {
   suggestions: any;
   onApplySuggestion: any;
   moveUp: any;
+  isAnalyzing: boolean;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({

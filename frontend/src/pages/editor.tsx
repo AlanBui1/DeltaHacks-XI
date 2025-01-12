@@ -412,6 +412,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
+          onApplySuggestion={onApplySuggestion}
+          moveUp ={moveUp}  
           pdfData={pdfData}
           isAnalyzing={isAnalyzing}  />
       </div>

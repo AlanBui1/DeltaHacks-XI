@@ -7,8 +7,9 @@ import subprocess
 import os
 import cohere
 import re
+import json
 
-def talkToCohere(system_message, message):
+def talkToCohere(system_message, message, schema=None):
     co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
 
     # Add the messages
@@ -18,7 +19,10 @@ def talkToCohere(system_message, message):
     ]
 
     # Generate the response
-    response = co.chat(model="command-r-plus-08-2024", messages=messages)
+    if schema is None:
+        response = co.chat(model="command-r-plus-08-2024", messages=messages)
+    else:
+        response = co.chat(model="command-r-plus-08-2024", messages=messages, response_format={"type": "json_object", "json_schema": schema})
 
     return response.message.content[0].text
 
@@ -35,7 +39,7 @@ def getMatchingWords(inp: str, skills):
     for word in skills:
         escaped_word = re.escape(word)
         pattern = rf'\b{escaped_word}\b'
-        total_freq[word] = re.findall(pattern, inp, re.IGNORECASE)
+        total_freq[word] = len(list(re.findall(pattern, inp, re.IGNORECASE)))
 
     skills = [i for i in skills]
     for i in range(len(skills)):
@@ -79,7 +83,96 @@ class GetKeywords(APIView):
             'keywords': skills
         }, status=status.HTTP_200_OK)
     
-    
+class ExtractResumeData(APIView):
+    def post(self, request):
+        text = request.data.get('text')
+
+        response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format.""",
+                     f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
+                     {
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "email": { "type": "string" },
+    "number": { "type": "string" },
+    "linkedin": { "type": "string" },
+    "github": { "type": "string" },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "date": { "type": "string" },
+          "skills": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "points": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["title", "date", "skills", "points"]
+      }
+    },
+    "experiences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "company": { "type": "string" },
+          "location": { "type": "string" },
+          "date": { "type": "string" },
+          "points": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["title", "company", "location", "date", "points"]
+      }
+    },
+    "educations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "school": { "type": "string" },
+          "date": { "type": "string" },
+          "location": { "type": "string" },
+          "degree": { "type": "string" }
+        },
+        "required": ["school", "date", "location", "degree"]
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "other": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["languages", "frameworks", "tools", "other"]
+    }
+  },
+  "required": ["name", "projects", "experiences", "educations", "skills"]
+})
+        
+        return Response(json.loads(response), status=status.HTTP_200_OK)
         
 class ReorderSkills(APIView):
     def post(self, request):

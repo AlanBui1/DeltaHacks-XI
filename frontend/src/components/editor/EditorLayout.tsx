@@ -50,7 +50,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   onAnalyze,
   suggestions,
   onApplySuggestion,
-  moveUp
+  moveUp,
+  isAnalyzing
 }) => {
   const [jobDescript, setJobDescription] = useState("");
   return (
@@ -82,6 +83,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
             onAnalyze={onAnalyze}
             suggestions={suggestions}
             onApplySuggestion={onApplySuggestion}
+            isAnalyzing={isAnalyzing}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

@@ -25,19 +25,7 @@ const PDFPreviewPanel: React.FC<PDFPreviewPanelProps> = ({
     <Card className="w-full h-full bg-white flex flex-col rounded-none">
       {/* Preview Controls */}
       <div className="p-4 border-b flex items-center justify-between">
-        <div className="text-lg font-semibold">Resume Preview</div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={onZoomOut}>
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          <span className="min-w-[60px] text-center">{zoomLevel}%</span>
-          <Button variant="outline" size="icon" onClick={onZoomIn}>
-            <ZoomIn className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" onClick={onDownload}>
-            <Download className="h-4 w-4" />
-          </Button>
-        </div>
+        <h3 className="text-lg font-semibold">Resume Preview</h3>
       </div>
 
       {/* PDF Preview Area */}

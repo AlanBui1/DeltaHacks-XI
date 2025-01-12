@@ -7,6 +7,7 @@ import { convertToLatex, Experience, Project, ResumeData, skills, skillToType } 
 import { ResumeSection } from "@/components/editor/ResumeForm";
 import VoiceflowWidget from "@/components/editor/VoiceFlow";
 import Suggestion from "@/components/editor/OptimizationPanel"
+import pdfToText from "react-pdftotext";
 
 interface EditorPageProps {}
 
@@ -108,8 +109,90 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     console.log("Exporting resume...");
   };
 
-  const handleImport = () => {
-    console.log("Importing resume...");
+  const [isImporting, setIsImporting] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  const dataToSections: ((data: ResumeData) => ResumeSection[]) = (data) => {
+    return [
+      {
+        id: "education",
+        title: "Education",
+        type: "education",
+        entries: data.educations.map((ed, i) => ({
+          id: `ed${i}`,
+          title: ed.school,
+          company: ed.degree,
+          location: ed.location,
+          date: ed.date,
+          bulletPoints: [],
+          display: true
+        }))
+      },
+      {
+        id: "experience",
+        title: "Experience",
+        type: "experience",
+        entries: data.experiences.map((exp, i) => ({
+          id: `exp${i}`,
+          title: exp.title,
+          company: exp.company,
+          location: exp.location,
+          date: exp.date,
+          bulletPoints: exp.points,
+          display: true
+        })),
+      },
+      {
+        id: "projects",
+        title: "Projects",
+        type: "project",
+        entries: data.projects.map((proj, i) => ({
+          id: `proj${i}`,
+          title: proj.title,
+          date: proj.date,
+          bulletPoints: proj.points,
+          display: true
+        })),
+      },
+      {
+        id: "skills",
+        title: "Skills",
+        type: "skill",
+        entries: [...data.skills.languages, ...data.skills.frameworks, ...data.skills.tools, ...data.skills.other].map((skill, i) => ({
+          id: `skill${i}`,
+          title: skill,
+          date: "",
+          bulletPoints: [],
+          display: true
+        }))
+      }
+    ]
+  };
+
+  const handleImport = async (file: File) => {
+    setIsImporting(true);
+    const text = await pdfToText(file);
+    console.log("step 2")
+    const resumeRes = await fetch("http://127.0.0.1:8000/api/extract-resume-data/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text
+      })
+    });
+
+    const resumeData: ResumeData & { name: string, email: string | undefined, number: string | undefined, github: string | undefined, linkedin: string | undefined } = await resumeRes.json();
+
+    setName(resumeData.name);
+    setEmail(resumeData.email ?? "");
+    setNumber(resumeData.number ?? "");
+    setGithub(resumeData.github ?? "");
+    setLinkedin(resumeData.linkedin ?? "");
+    setLocalSections(dataToSections(resumeData));
+
+    setIsImporting(false);
   };
 
   const extractSkills = (text: string) => [...new Set(text.match(/[\w+.]*\w+/g))].filter((sk) => skills.includes(sk));
@@ -171,6 +254,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   };
 
   const handleAnalyze = async (description: string) => {
+    setIsAnalyzing(true);
     const skills = localSections[3].entries.map((skill) => skill.title);
     const reorderRes = await fetch("http://127.0.0.1:8000/api/reorder-skills/", {
       method: "POST",
@@ -207,6 +291,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         entries: data.skills.map((skill, i) => ({ id: `skill${i}`, title: skill, date: "", bulletPoints: [] }))
       }
     ]);
+
+    setIsAnalyzing(false);
   };
 
   const [name, setName] = useState("");
@@ -214,6 +300,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   const [email, setEmail] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
+
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   // const [data, setData] = useState<ResumeData>({
   //   projects: [],
@@ -305,10 +393,10 @@ const EditorPage: React.FC<EditorPageProps> = () => {
         onExport={handleExport}
         onImport={handleImport}
         onRender={handleRender}
+        isImporting={isImporting}
       />
       <div className="flex-1">
-        <EditorLayout 
-          pdfData={pdfData} 
+        <EditorLayout
           onPanelResize={handlePanelResize} 
           localSections={localSections} 
           setLocalSections={setLocalSections} 
@@ -324,8 +412,13 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
+<<<<<<< HEAD
           onApplySuggestion={onApplySuggestion}
           moveUp ={moveUp}  />
+=======
+          pdfData={pdfData}
+          isAnalyzing={isAnalyzing}  />
+>>>>>>> 99cb0fbfbc7c5a90bd93b0edbac75406edf281be
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

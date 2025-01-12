@@ -6,15 +6,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Save, Download, Upload, History, ChevronDown, Cog } from "lucide-react";
+import { Save, Download, Upload, History, ChevronDown, Cog, Loader, LoaderCircle } from "lucide-react";
 
 interface VersionControlBarProps {
   currentVersion?: string;
   onVersionChange?: (version: string) => void;
   onSave?: () => void;
   onExport?: () => void;
-  onImport?: () => void;
+  onImport?: (file: File) => void;
   onRender?: () => void;
+  isImporting: boolean;
 }
 
 const VersionControlBar: React.FC<VersionControlBarProps> = ({
@@ -24,6 +25,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
   onExport = () => {},
   onImport = () => {},
   onRender = () => {},
+  isImporting
 }) => {
   const versions = [
     { id: "1", name: "Version 1" },
@@ -59,15 +61,24 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
           History
         </Button> */}
       </div>
-      <Button variant="default" onClick={onRender}>
-        <Cog className="h-4 w-4 mr-2" />
-        Render Resume
-      </Button>
-      {/* <div className="flex items-center gap-2">
-        <Button variant="outline" onClick={onImport}>
-          <Upload className="h-4 w-4 mr-2" />
-          Import
+      <div className="flex items-center gap-2">
+        {isImporting && <LoaderCircle className="animate-spin" />}
+
+        <input type="file" id="import-pdf" className="hidden" accept=".pdf" onChange={(e) => onImport(e.target.files && e.target.files[0])} />
+        
+        <Button variant="outline" className="p-0">
+          <label htmlFor="import-pdf" className="flex items-center p-4 cursor-pointer">
+            <Upload className="h-4 w-4 mr-2" />
+            Import
+          </label>
         </Button>
+        
+        <Button variant="default" onClick={onRender}>
+          <Cog className="h-4 w-4 mr-2" />
+          Render Resume
+        </Button>
+      </div>
+      {/*
         <Button variant="outline" onClick={onExport}>
           <Download className="h-4 w-4 mr-2" />
           Export

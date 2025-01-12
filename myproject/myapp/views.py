@@ -8,65 +8,45 @@ import cohere
 import re
 import json
 
-def talkToCohere(system_message, message, schema=None):
-    co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
-
-    # Add the messages
-    messages = [
-        {"role": "system", "content": system_message},
-        {"role": "user", "content": message},
-    ]
-
-    # Generate the response
-    if schema is None:
-        response = co.chat(model="command-r-plus-08-2024", messages=messages)
-    else:
-        response = co.chat(model="command-r-plus-08-2024", messages=messages, response_format={"type": "json_object", "json_schema": schema})
-
-    return response.message.content[0].text
-
-def getSkills():
-    with open('myapp/skills.txt') as inFile:
-        skills = {line.strip(): 1 for line in inFile.readlines()}
-    return skills
-
-def getMatchingWords(inp: str, skills):
-    #returns the words in inp that are in skills
-    #where inp is a string and skills is a list of strings
-
-    total_freq = {}
-    for word in skills:
-        escaped_word = re.escape(word)
-        pattern = rf'\b{escaped_word}\b'
-        total_freq[word] = len(list(re.findall(pattern, inp, re.IGNORECASE)))
-
-    skills = [i for i in skills]
-    for i in range(len(skills)):
-        for j in range(i+1, len(skills)):
-            word1 = skills[i]
-            word2 = skills[j]
-            if len(word1.split()) == len(word2.split()):
-                continue
-            
-            if word1 in word2:
-                total_freq[word1] -= total_freq[word2]
-            if word2 in word1:
-                total_freq[word2] -= total_freq[word1]
-
-    freq = {}
-
-    for word in total_freq:
-        if total_freq[word] != 0:
-            freq[word] = total_freq[word]
-
-    return freq
-
-
-
 class GetKeywords(APIView):
     def post(self, request):
+        def getSkills():
+            with open('myapp/skills.txt') as inFile:
+                skills = {line.strip(): 1 for line in inFile.readlines()}
+            return skills
         skills = getSkills()
         description = request.data.get('description', '').strip().split()
+
+        def getMatchingWords(inp: str, skills):
+            #returns the words in inp that are in skills
+            #where inp is a string and skills is a list of strings
+
+            total_freq = {}
+            for word in skills:
+                escaped_word = re.escape(word)
+                pattern = rf'\b{escaped_word}\b'
+                total_freq[word] = len(list(re.findall(pattern, inp, re.IGNORECASE)))
+
+            skills = [i for i in skills]
+            for i in range(len(skills)):
+                for j in range(i+1, len(skills)):
+                    word1 = skills[i]
+                    word2 = skills[j]
+                    if len(word1.split()) == len(word2.split()):
+                        continue
+                    
+                    if word1 in word2:
+                        total_freq[word1] -= total_freq[word2]
+                    if word2 in word1:
+                        total_freq[word2] -= total_freq[word1]
+
+            freq = {}
+
+            for word in total_freq:
+                if total_freq[word] != 0:
+                    freq[word] = total_freq[word]
+
+            return freq
 
         freq = getMatchingWords(description, skills)
 
@@ -76,6 +56,10 @@ class GetKeywords(APIView):
             }, status=status.HTTP_200_OK)
     
     def get(self, request):
+        def getSkills():
+            with open('myapp/skills.txt') as inFile:
+                skills = {line.strip(): 1 for line in inFile.readlines()}
+            return skills
         skills = [i for i in self.getSkills()]
 
         return Response({
@@ -85,6 +69,23 @@ class GetKeywords(APIView):
 class ExtractResumeData(APIView):
     def post(self, request):
         text = request.data.get('text')
+
+        def talkToCohere(system_message, message, schema=None):
+            co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
+
+            # Add the messages
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": message},
+            ]
+
+            # Generate the response
+            if schema is None:
+                response = co.chat(model="command-r-plus-08-2024", messages=messages)
+            else:
+                response = co.chat(model="command-r-plus-08-2024", messages=messages, response_format={"type": "json_object", "json_schema": schema})
+
+            return response.message.content[0].text
 
         response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format.""",
                      f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format, with abbreviated months. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
@@ -175,6 +176,10 @@ class ExtractResumeData(APIView):
         
 class ReorderSkills(APIView):
     def post(self, request):
+        def getSkills():
+            with open('myapp/skills.txt') as inFile:
+                skills = {line.strip(): 1 for line in inFile.readlines()}
+            return skills
         all_skills = getSkills()
 
         skills = request.data.get('skills')
@@ -183,7 +188,36 @@ class ReorderSkills(APIView):
         description = description.strip()
 
         sections = request.data.get('localSections')
+        def getMatchingWords(inp: str, skills):
+            #returns the words in inp that are in skills
+            #where inp is a string and skills is a list of strings
 
+            total_freq = {}
+            for word in skills:
+                escaped_word = re.escape(word)
+                pattern = rf'\b{escaped_word}\b'
+                total_freq[word] = len(list(re.findall(pattern, inp, re.IGNORECASE)))
+
+            skills = [i for i in skills]
+            for i in range(len(skills)):
+                for j in range(i+1, len(skills)):
+                    word1 = skills[i]
+                    word2 = skills[j]
+                    if len(word1.split()) == len(word2.split()):
+                        continue
+                    
+                    if word1 in word2:
+                        total_freq[word1] -= total_freq[word2]
+                    if word2 in word1:
+                        total_freq[word2] -= total_freq[word1]
+
+            freq = {}
+
+            for word in total_freq:
+                if total_freq[word] != 0:
+                    freq[word] = total_freq[word]
+
+            return freq
         related_skills_freq = getMatchingWords(description, all_skills)
         for skill in skills:
             if skill not in related_skills_freq:
@@ -272,6 +306,23 @@ Include a reason for the change with citations to the job description.
 
         messageToPrompt = formatBullets(sections)
         systemMessageToPrompt = getSystemMessage()
+
+        def talkToCohere(system_message, message, schema=None):
+            co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
+
+            # Add the messages
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": message},
+            ]
+
+            # Generate the response
+            if schema is None:
+                response = co.chat(model="command-r-plus-08-2024", messages=messages)
+            else:
+                response = co.chat(model="command-r-plus-08-2024", messages=messages, response_format={"type": "json_object", "json_schema": schema})
+
+            return response.message.content[0].text
 
         fromCohere = talkToCohere(systemMessageToPrompt, messageToPrompt)
 

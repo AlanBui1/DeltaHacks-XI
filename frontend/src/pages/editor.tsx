@@ -64,7 +64,7 @@ const defaultSections: ResumeSection[] = [
       },
       {
         id: "proj2",
-        title: "Resume Customizer",
+        title: "Resume Reviewer",
         date: "Jan. 2025 -- Present",
         bulletPoints: [
           "Built resume customizer using React and Django",

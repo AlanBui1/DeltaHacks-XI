@@ -36,7 +36,7 @@ const VersionControlBar: React.FC<VersionControlBarProps> = ({
   return (
     <div className="w-full h-[60px] bg-white border-b flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-bold font-mono">Resume Customizer</h1>
+        <h1 className="text-xl font-bold font-mono">Resume Reviewer</h1>
         {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="w-[150px] justify-between">

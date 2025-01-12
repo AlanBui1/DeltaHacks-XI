@@ -87,7 +87,7 @@ class ExtractResumeData(APIView):
         text = request.data.get('text')
 
         response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format.""",
-                     f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
+                     f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format, with abbreviated months. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
                      {
   "type": "object",
   "properties": {

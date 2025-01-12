@@ -28,6 +28,7 @@ interface EditorLayoutProps {
   onAnalyze: (desc: string) => void;
   suggestions: any;
   onApplySuggestion: any;
+  moveUp: any;
 };
 
 const EditorLayout: React.FC<EditorLayoutProps> = ({
@@ -48,7 +49,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
   pdfData,
   onAnalyze,
   suggestions,
-  onApplySuggestion
+  onApplySuggestion,
+  moveUp
 }) => {
   const [jobDescript, setJobDescription] = useState("");
   return (
@@ -60,7 +62,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({
       >
         {/* Left Panel - Resume Form */}
         <ResizablePanel defaultSize={defaultSizes[0]} minSize={20}>
-          <ResumeForm localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub} />
+          <ResumeForm localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub} moveUp={moveUp}/>
         </ResizablePanel>
 
         <ResizableHandle />

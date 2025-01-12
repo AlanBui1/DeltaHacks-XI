@@ -37,6 +37,7 @@ interface ResumeFormProps {
   github: string;
   setGithub: Dispatch<SetStateAction<string>>;
   onSectionUpdate?: (sections: ResumeSection[]) => void;
+  moveUp: any;
 }
 
 const ResumeForm: React.FC<ResumeFormProps> = ({
@@ -52,7 +53,8 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
   linkedin,
   setLinkedin,
   github,
-  setGithub
+  setGithub,
+  moveUp
 }) => {
 
   const addEntry = (sectionId: string) => {
@@ -195,6 +197,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({
                     updateEntry(section.id, entry.id, updatedEntry)
                   }
                   onDelete={() => deleteEntry(section.id, entry.id)}
+                  moveUp={moveUp}
                 />
               ))}
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, GripVertical, Trash2 } from "lucide-react";
+import { Plus, GripVertical, Trash2, ChevronUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -22,6 +22,7 @@ interface BulletPointEditorProps {
   onChange: (entry: EntryFields) => void;
   onDelete: () => void;
   type: "education" | "experience" | "project" | "skill";
+  moveUp: any;
 }
 
 const input1Name = {
@@ -40,6 +41,7 @@ const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
   onChange,
   onDelete,
   type,
+  moveUp
 }) => {
   const addBulletPoint = () => {
     onChange({
@@ -123,7 +125,7 @@ const BulletPointEditor: React.FC<BulletPointEditorProps> = ({
           <div className="text-sm font-medium text-gray-500">Bullet Points</div>
           {entry.bulletPoints.map((point, index) => (
             <div key={index} className="flex gap-2">
-              <GripVertical className="h-5 w-5 text-gray-400 mt-2" />
+              <ChevronUp onClick = {() => {moveUp(type, entry.id, index)}}className="h-5 w-5 text-gray-400 mt-2" />
               <Textarea
                 value={point}
                 onChange={(e) => updateBulletPoint(index, e.target.value)}

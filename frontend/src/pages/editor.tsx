@@ -143,7 +143,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       }
     }, name, number, email, linkedin, github);
 
-    console.log(latex)
+    // console.log(latex)
 
     const pdfFile = await fetch("http://127.0.0.1:8000/api/render-pdf/", {
       method: "POST",
@@ -275,6 +275,28 @@ const EditorPage: React.FC<EditorPageProps> = () => {
 
   const [localSections, setLocalSections] = useState<ResumeSection[]>(defaultSections);
 
+  const moveUp = (type: string, entryId: string, idx: number) => {
+    if (idx === 0) return;
+
+    const newArray = [];
+
+    for (let i in localSections){
+      let curSection = localSections[i]
+      if (curSection['id'] === type){
+        for (let j in curSection['entries']){
+          if (curSection['entries'][j]['id'] === entryId){
+
+            [curSection['entries'][j]['bulletPoints'][idx], curSection['entries'][j]['bulletPoints'][idx-1]] = [curSection['entries'][j]['bulletPoints'][idx-1], curSection['entries'][j]['bulletPoints'][idx]];
+          }
+        }
+      }
+
+      newArray.push(localSections[i])
+    }
+
+    setLocalSections(newArray);
+  }
+
   return (
     <div className="h-screen w-full bg-background flex flex-col">
       <VersionControlBar
@@ -302,7 +324,8 @@ const EditorPage: React.FC<EditorPageProps> = () => {
           setGithub={setGithub}
           onAnalyze={handleAnalyze}
           suggestions={suggestionData}
-          onApplySuggestion={onApplySuggestion}  />
+          onApplySuggestion={onApplySuggestion}
+          moveUp ={moveUp}  />
       </div>
       <VoiceflowWidget></VoiceflowWidget>
     </div>

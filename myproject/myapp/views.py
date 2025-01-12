@@ -6,6 +6,7 @@ import requests
 import subprocess
 import os
 import cohere
+import re
 
 def talkToCohere(system_message, message):
     co = cohere.ClientV2(api_key="D8KMKqvP4xTS113bqJwzyKTY4nFABXWH1IQDESHW")
@@ -32,13 +33,17 @@ def getMatchingWords(inp: str, skills):
 
     total_freq = {}
     for word in skills:
-        total_freq[word] = inp.count(word)
+        escaped_word = re.escape(word)
+        pattern = rf'\b{escaped_word}\b'
+        total_freq[word] = re.findall(pattern, inp, re.IGNORECASE)
 
     skills = [i for i in skills]
     for i in range(len(skills)):
         for j in range(i+1, len(skills)):
             word1 = skills[i]
             word2 = skills[j]
+            if len(word1.split()) == len(word2.split()):
+                continue
             
             if word1 in word2:
                 total_freq[word1] -= total_freq[word2]

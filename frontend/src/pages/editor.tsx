@@ -173,7 +173,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
     setIsImporting(true);
     const text = await pdfToText(file);
     console.log("step 2")
-    const resumeRes = await fetch("https://deltahacks-xi.onrender.com/api/extract-resume-data/", {
+    const resumeRes = await fetch("http://localhost:8000/api/extract-resume-data/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -228,7 +228,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
 
     // console.log(latex)
 
-    const pdfFile = await fetch("https://deltahacks-xi.onrender.com/api/render-pdf/", {
+    const pdfFile = await fetch("http://localhost:8000/api/render-pdf/", {
       method: "POST",
       body: latex,
     });
@@ -256,7 +256,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
   const handleAnalyze = async (description: string) => {
     setIsAnalyzing(true);
     const skills = localSections[3].entries.map((skill) => skill.title);
-    const reorderRes = await fetch("https://deltahacks-xi.onrender.com/api/reorder-skills/", {
+    const reorderRes = await fetch("http://localhost:8000/api/reorder-skills/", {
       method: "POST",
       body: JSON.stringify({
         skills,

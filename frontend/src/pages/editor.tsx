@@ -5,6 +5,7 @@ import EditorLayout from "@/components/editor/EditorLayout";
 import VersionControlBar from "@/components/editor/VersionControlBar";
 import { convertToLatex, Experience, Project, ResumeData, skillToType } from "@/lib/latex";
 import { ResumeSection } from "@/components/editor/ResumeForm";
+import VoiceflowWidget from "@/components/editor/VoiceFlow";
 
 interface EditorPageProps {}
 
@@ -216,6 +217,7 @@ const EditorPage: React.FC<EditorPageProps> = () => {
       <div className="flex-1">
         <EditorLayout onAnalyze={handleAnalyze} pdfData={pdfData} onPanelResize={handlePanelResize} localSections={localSections} setLocalSections={setLocalSections} name={name} setName={setName} number={number} setNumber={setNumber} email={email} setEmail={setEmail} linkedin={linkedin} setLinkedin={setLinkedin} github={github} setGithub={setGithub}  />
       </div>
+      <VoiceflowWidget></VoiceflowWidget>
     </div>
   );
 };

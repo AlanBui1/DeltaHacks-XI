@@ -87,7 +87,7 @@ class ExtractResumeData(APIView):
 
             return response.message.content[0].text
 
-        response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format.""",
+        response = talkToCohere("""You are a resume reader. You will be given a resume in plain text and should return it in the desired format. Do not add any additional info""",
                      f"Respond in JSON format. Don't add any additional info. Give dates in Month Year format, with abbreviated months. Use date ranges wherever possible (e.g., Jan. 2024 -- Present). Here's the resume:\n\n{text}",
                      {
   "type": "object",
@@ -359,11 +359,11 @@ class RenderPDF(APIView):
 
         retcode = proc.returncode
         if not retcode == 0:
-            os.unlink('resume.pdf')
+            # os.unlink('resume.pdf')
             raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd))) 
 
-        os.unlink('resume.tex')
-        os.unlink('resume.log')
+        # os.unlink('resume.tex')
+        # os.unlink('resume.log')
 
         with open("resume.pdf", "rb") as pdf_file:
             return HttpResponse(pdf_file.read(), content_type="application/pdf")
